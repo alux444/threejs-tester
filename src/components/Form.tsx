@@ -10,10 +10,10 @@ const Form = ({ updateDisplay }) => {
     "Cone",
     "Cylinder",
     "Dodecahedron",
-    "Isocahedron",
+    "Icosahedron",
     "Octahedron",
     "Sphere",
-    "Tetrahedtron",
+    "Tetrahedron",
     "Torus",
     "TorusKnot",
   ];

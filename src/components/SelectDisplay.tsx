@@ -17,7 +17,7 @@ const SelectDisplay = () => {
       <p>Select Criteria</p>
       <small>Currently: {form.shape} </small>
       <Form updateDisplay={newDisplaySubmit} />
-      <Display />
+      <Display data={form} />
     </div>
   );
 };
