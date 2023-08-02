@@ -3,104 +3,99 @@ import * as THREE from "three";
 import { FormData } from "./FormInterface";
 
 const Display = ({ data }: { data: FormData }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  console.log(data);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    console.log(data);
 
-  let scene: THREE.Scene,
-    camera: THREE.PerspectiveCamera,
-    renderer: THREE.WebGLRenderer,
-    display: THREE.Mesh;
+    let scene: THREE.Scene,
+        camera: THREE.PerspectiveCamera,
+        renderer: THREE.WebGLRenderer,
+        display: THREE.Mesh,
+        wireframe: THREE.LineSegments;
 
-  // "Capsule",
-  // "Cone",
-  // "Cylinder",
-  // "Dodecahedron",
-  // "Isocahedron",
-  // "Octahedron",
-  // "Sphere",
-  // "Tetrahedtron",
-  // "Torus",
-  // "TorusKnot",
+    const chooseShape = () => {
+        const shapes = {
+            Capsule: THREE.CapsuleGeometry,
+            Cone: THREE.ConeGeometry,
+            Cylinder: THREE.CylinderGeometry,
+            Dodecahedron: THREE.DodecahedronGeometry,
+            Icosahedron: THREE.IcosahedronGeometry,
+            Octahedron: THREE.OctahedronGeometry,
+            Sphere: THREE.SphereGeometry,
+            Tetrahedron: THREE.TetrahedronGeometry,
+            Torus: THREE.TorusGeometry,
+            TorusKnot: THREE.TorusKnotGeometry,
+        };
 
-  const chooseShape = () => {
-    let geometry;
-    if (data.shape == "Capsule") {
-      geometry = new THREE.CapsuleGeometry(5, 10, 10);
-    } else if (data.shape == "Cone") {
-      geometry = new THREE.ConeGeometry(5, 10, 10);
-    } else if (data.shape == "Cylinder") {
-      geometry = new THREE.CylinderGeometry(5, 10, 10);
-    } else if (data.shape == "Dodecahedron") {
-      geometry = new THREE.DodecahedronGeometry(5, 1);
-    } else if (data.shape == "Icosahedron") {
-      geometry = new THREE.IcosahedronGeometry(5, 1);
-    } else if (data.shape == "Octahedron") {
-      geometry = new THREE.OctahedronGeometry(5, 10);
-    } else if (data.shape == "Sphere") {
-      geometry = new THREE.SphereGeometry(5, 10, 10);
-    } else if (data.shape == "Tetrahedron") {
-      geometry = new THREE.TetrahedronGeometry(5, 10);
-    } else if (data.shape == "Torus") {
-      geometry = new THREE.TorusGeometry(5, 10, 10);
-    } else if (data.shape == "TorusKnot") {
-      geometry = new THREE.TorusKnotGeometry(5, 10, 10);
-    } else {
-      geometry = new THREE.BoxGeometry(10, 10, 10, 10, 10, 10);
-    }
+        const selectedShape = shapes[data.shape] || THREE.BoxGeometry;
+        return new selectedShape(5, 10, 10);
+    };
 
-    return geometry;
-  };
+    const initScene = () => {
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(
+            50,
+            (window.innerWidth * 0.8) / (window.innerHeight * 0.8),
+            1,
+            1000
+        );
 
-  const initScene = () => {
-    scene = new THREE.Scene();
-    camera = new THREE.PerspectiveCamera(
-      50,
-      (window.innerWidth * 0.8) / (window.innerHeight * 0.8),
-      1,
-      1000
-    );
+        camera.position.z = 25;
 
-    camera.position.z = 25;
+        renderer = new THREE.WebGLRenderer({
+            antialias: true,
+            canvas: canvasRef.current!,
+            alpha: true,
+        });
 
-    renderer = new THREE.WebGLRenderer({
-      antialias: true,
-      canvas: canvasRef.current!,
-      alpha: true,
-    });
+        renderer.setSize(window.innerWidth * 0.8, window.innerHeight * 0.8);
+        renderer.setClearColor(0x000000, 0);
 
-    renderer.setSize(window.innerWidth * 0.8, window.innerHeight * 0.8);
-    renderer.setClearColor(0x000000, 0);
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        ambientLight.castShadow = true;
+        scene.add(ambientLight);
 
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-    ambientLight.castShadow = true;
-    scene.add(ambientLight);
+        const spotlight = new THREE.SpotLight(0xffffff, 1);
+        spotlight.castShadow = true;
+        spotlight.position.set(0, 64, 32);
+        scene.add(spotlight);
 
-    const spotlight = new THREE.SpotLight(0xffffff, 1);
-    spotlight.castShadow = true;
-    spotlight.position.set(0, 64, 32);
-    scene.add(spotlight);
+        //   const texture = new THREE.TextureLoader().load(inputTexture);
+        const geometry = chooseShape();
+        //   const material = new THREE.MeshBasicMaterial({ map: faceTexture });
+        const material = new THREE.MeshBasicMaterial({ color: data.color });
+        display = new THREE.Mesh(geometry, material);
+        scene.add(display);
 
-    //   const texture = new THREE.TextureLoader().load(inputTexture);
-    const geometry = chooseShape();
-    //   const material = new THREE.MeshBasicMaterial({ map: faceTexture });
-    const material = new THREE.MeshNormalMaterial();
-    display = new THREE.Mesh(geometry, material);
-    scene.add(display);
-  };
+        const wireframeGeometry = new THREE.WireframeGeometry(geometry);
+        const wireframeMaterial = new THREE.LineBasicMaterial({
+            color: 0x000000,
+        });
+        wireframe = new THREE.LineSegments(
+            wireframeGeometry,
+            wireframeMaterial
+        );
 
-  const animate = () => {
-    display.rotation.x += 0.01;
+        if (data.outlineSegments) {
+            scene.add(wireframe);
+        }
+    };
 
-    renderer.render(scene, camera);
-    window.requestAnimationFrame(animate);
-  };
+    const animate = () => {
+        display.rotation.x += 0.01;
+        if (data.outlineSegments) {
+            wireframe.rotation.x += 0.01;
+        }
 
-  useEffect(() => {
-    initScene();
-    animate();
-  }, [data]);
+        renderer.render(scene, camera);
+        window.requestAnimationFrame(animate);
+    };
 
-  return <canvas ref={canvasRef} />;
+    useEffect(() => {
+        initScene();
+        animate();
+    }, [data]);
+
+    return <canvas ref={canvasRef} />;
 };
 
 export default Display;

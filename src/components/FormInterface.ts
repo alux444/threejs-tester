@@ -1,3 +1,5 @@
 export interface FormData {
-  shape: string;
+    shape: string;
+    color: string;
+    outlineSegments: boolean;
 }

@@ -4,22 +4,24 @@ import Form from "./Form";
 import { FormData } from "./FormInterface";
 
 const SelectDisplay = () => {
-  const [form, setForm] = useState<FormData>({
-    shape: "Box",
-  });
+    const [form, setForm] = useState<FormData>({
+        shape: "Box",
+        color: "#F2F2A2",
+        outlineSegments: false,
+    });
 
-  const newDisplaySubmit = (data: FormData) => {
-    setForm(data);
-  };
+    const newDisplaySubmit = (data: FormData) => {
+        setForm(data);
+    };
 
-  return (
-    <div>
-      <p>Select Criteria</p>
-      <small>Currently: {form.shape} </small>
-      <Form updateDisplay={newDisplaySubmit} />
-      <Display data={form} />
-    </div>
-  );
+    return (
+        <div>
+            <p>Select Criteria</p>
+            <small>Currently: {form.shape} </small>
+            <Form updateDisplay={newDisplaySubmit} />
+            <Display data={form} />
+        </div>
+    );
 };
 
 export default SelectDisplay;
