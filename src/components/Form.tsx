@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { FormData } from "./FormInterface";
+import { SketchPicker } from "react-color";
 
 const Form = ({ updateDisplay }) => {
     const [selectedShape, setSelectShape] = useState<string>("Box");
-    const [color, setColor] = useState<string>("#000000");
+    const [color, setColor] = useState<string>("##ffff00");
     const [outlineSegments, setOutlineSegments] = useState<boolean>(true);
     const [xRot, setXRot] = useState<number>(0.01);
     const [yRot, setYRot] = useState<number>(0.01);
@@ -25,6 +26,10 @@ const Form = ({ updateDisplay }) => {
 
     const handleShapeChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectShape(event.target.value);
+    };
+
+    const handleColorChange = (newColor) => {
+        setColor(newColor.hex);
     };
 
     const handleRotChange = (e) => {
@@ -67,6 +72,11 @@ const Form = ({ updateDisplay }) => {
                         </option>
                     ))}
                 </select>
+                <SketchPicker
+                    color={color}
+                    onChangeComplete={handleColorChange}
+                />
+                <div style={{ marginTop: 10 }}>Selected color: {color}</div>
                 <label>
                     Show Segment Outlines
                     <input

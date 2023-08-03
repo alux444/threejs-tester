@@ -27,7 +27,7 @@ const Display = ({ data }: { data: FormData }) => {
         };
 
         const selectedShape = shapes[data.shape] || THREE.BoxGeometry;
-        return new selectedShape(5, 10, 10);
+        return new selectedShape();
     };
 
     const initScene = () => {
@@ -39,7 +39,7 @@ const Display = ({ data }: { data: FormData }) => {
             1000
         );
 
-        camera.position.z = 25;
+        camera.position.z = 10;
 
         renderer = new THREE.WebGLRenderer({
             antialias: true,
