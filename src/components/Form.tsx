@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { FormData } from "./FormInterface";
-import { SketchPicker } from "react-color";
+import { SketchPicker, ColorResult } from "react-color";
 
 const Form = ({ updateDisplay }) => {
     const [selectedShape, setSelectShape] = useState<string>("Box");
     const [color, setColor] = useState<string>("##ffff00");
     const [outlineSegments, setOutlineSegments] = useState<boolean>(true);
+    const [texture, setTexture] = useState<File>();
+    const [textureURL, setTextureURL] = useState<string>();
     const [xRot, setXRot] = useState<number>(0.01);
     const [yRot, setYRot] = useState<number>(0.01);
     const [zRot, setZRot] = useState<number>(0.01);
@@ -28,7 +30,7 @@ const Form = ({ updateDisplay }) => {
         setSelectShape(event.target.value);
     };
 
-    const handleColorChange = (newColor) => {
+    const handleColorChange = (newColor: ColorResult) => {
         setColor(newColor.hex);
     };
 
@@ -47,6 +49,13 @@ const Form = ({ updateDisplay }) => {
             default:
                 break;
         }
+    };
+
+    const onChangeImage = (e) => {
+        const image = e.target.files[0];
+        setTexture(image);
+        const imageURL = URL.createObjectURL(image);
+        setTextureURL(imageURL);
     };
 
     const onSubmit = (event: any) => {
@@ -76,7 +85,6 @@ const Form = ({ updateDisplay }) => {
                     color={color}
                     onChangeComplete={handleColorChange}
                 />
-                <div style={{ marginTop: 10 }}>Selected color: {color}</div>
                 <label>
                     Show Segment Outlines
                     <input
@@ -106,6 +114,16 @@ const Form = ({ updateDisplay }) => {
                     name="zRot"
                     onChange={handleRotChange}
                 />
+
+                <input
+                    id="image-upload"
+                    type="file"
+                    className="file-input"
+                    onChange={onChangeImage}
+                    accept=".jpg,.jpeg,.png"
+                />
+                <p>Texture Preview</p>
+                <img src={textureURL} />
                 <button type="submit">Submit</button>
             </form>
         </div>
