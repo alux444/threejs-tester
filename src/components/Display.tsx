@@ -81,9 +81,13 @@ const Display = ({ data }: { data: FormData }) => {
     };
 
     const animate = () => {
-        display.rotation.x += 0.01;
+        display.rotation.x += data.xRotation;
+        display.rotation.y += data.yRotation;
+        display.rotation.z += data.zRotation;
         if (data.outlineSegments) {
-            wireframe.rotation.x += 0.01;
+            wireframe.rotation.x += data.xRotation;
+            wireframe.rotation.y += data.yRotation;
+            wireframe.rotation.z += data.zRotation;
         }
 
         renderer.render(scene, camera);

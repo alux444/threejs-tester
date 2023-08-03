@@ -8,6 +8,9 @@ const SelectDisplay = () => {
         shape: "Box",
         color: "#F2F2A2",
         outlineSegments: false,
+        xRotation: 0.01,
+        yRotation: 0.01,
+        zRotation: 0.01,
     });
 
     const newDisplaySubmit = (data: FormData) => {
