@@ -11,7 +11,8 @@ const Display = ({ data }: { data: FormData }) => {
         camera: THREE.PerspectiveCamera,
         display: THREE.Mesh,
         texture: THREE.Texture,
-        material: THREE.MeshBasicMaterial;
+        material: THREE.MeshBasicMaterial,
+        wireframe: THREE.LineSegments;
 
     const chooseShape = () => {
         const shapes = {
@@ -44,7 +45,7 @@ const Display = ({ data }: { data: FormData }) => {
             1000
         );
 
-        camera.position.z = 10;
+        camera.position.z = data.cameraZ;
 
         rendererRef.current = new THREE.WebGLRenderer({
             antialias: true,
@@ -69,6 +70,11 @@ const Display = ({ data }: { data: FormData }) => {
 
         const geometry = chooseShape();
 
+        const edgesGeometry = new THREE.EdgesGeometry(geometry);
+        const lineMaterial = new THREE.LineBasicMaterial({ color: 0xffffff });
+        wireframe = new THREE.LineSegments(edgesGeometry, lineMaterial);
+        scene.add(wireframe);
+
         if (data.texture != null) {
             texture = new THREE.TextureLoader().load(data.texture);
             material = new THREE.MeshBasicMaterial({
@@ -88,6 +94,9 @@ const Display = ({ data }: { data: FormData }) => {
         display.rotation.x += data.xRotation;
         display.rotation.y += data.yRotation;
         display.rotation.z += data.zRotation;
+        wireframe.rotation.x += data.xRotation;
+        wireframe.rotation.y += data.yRotation;
+        wireframe.rotation.z += data.zRotation;
         rendererRef.current?.render(scene, camera);
         window.requestAnimationFrame(animate);
     };

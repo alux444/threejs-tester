@@ -6,9 +6,13 @@ const Form = ({ updateDisplay }) => {
     const [selectedShape, setSelectShape] = useState<string>("Box");
     const [color, setColor] = useState<string>("#ffff00");
     const [textureURL, setTextureURL] = useState<string | null>(null);
+    const [z, setZ] = useState<number>(10);
     const [xRot, setXRot] = useState<number>(0.01);
     const [yRot, setYRot] = useState<number>(0.01);
     const [zRot, setZRot] = useState<number>(0.01);
+    const [one, setOne] = useState<number>(1);
+    const [two, setTwo] = useState<number>(1);
+    const [three, setThree] = useState<number>(1);
 
     const shapeOptions: string[] = [
         "Box",
@@ -32,7 +36,7 @@ const Form = ({ updateDisplay }) => {
         setColor(newColor.hex);
     };
 
-    const handleRotChange = (e) => {
+    const handleNumChange = (e) => {
         const { name, value } = e.target;
         switch (name) {
             case "xRot":
@@ -49,6 +53,22 @@ const Form = ({ updateDisplay }) => {
         }
     };
 
+    const handleZChange = (e) => {
+        setZ(e.target.value);
+    };
+
+    const handleOneChange = (e) => {
+        setOne(e.target.value);
+    };
+
+    const handleTwoChange = (e) => {
+        setTwo(e.target.value);
+    };
+
+    const handleThreeChange = (e) => {
+        setThree(e.target.value);
+    };
+
     const onChangeImage = (e) => {
         const image = e.target.files[0];
         const imageURL = URL.createObjectURL(image);
@@ -60,13 +80,14 @@ const Form = ({ updateDisplay }) => {
         const newDisplay: FormData = {
             shape: selectedShape,
             color: color,
+            cameraZ: z,
             xRotation: xRot,
             yRotation: yRot,
             zRotation: zRot,
             texture: textureURL,
-            optionOne: undefined,
-            optionTwo: undefined,
-            optionThree: undefined,
+            optionOne: one,
+            optionTwo: two,
+            optionThree: three,
         };
         updateDisplay(newDisplay);
     };
@@ -109,21 +130,51 @@ const Form = ({ updateDisplay }) => {
                         type="number"
                         value={xRot}
                         name="xRot"
-                        onChange={handleRotChange}
+                        onChange={handleNumChange}
                     />
                     <label>Y rotation</label>
                     <input
                         type="number"
                         value={yRot}
                         name="yRot"
-                        onChange={handleRotChange}
+                        onChange={handleNumChange}
                     />
                     <label>Z rotation</label>
                     <input
                         type="number"
                         value={zRot}
                         name="zRot"
-                        onChange={handleRotChange}
+                        onChange={handleNumChange}
+                    />
+                </div>
+                <div style={{ display: "flex", gap: "1rem" }}>
+                    <label>Camera Z value</label>
+                    <input
+                        type="number"
+                        value={z}
+                        name="z"
+                        onChange={handleZChange}
+                    />
+                    <label>Option One</label>
+                    <input
+                        type="number"
+                        value={one}
+                        name="one"
+                        onChange={handleOneChange}
+                    />
+                    <label>Option Two</label>
+                    <input
+                        type="number"
+                        value={two}
+                        name="two"
+                        onChange={handleTwoChange}
+                    />
+                    <label>Option Three</label>
+                    <input
+                        type="number"
+                        value={three}
+                        name="three"
+                        onChange={handleThreeChange}
                     />
                 </div>
                 <div
@@ -141,9 +192,14 @@ const Form = ({ updateDisplay }) => {
                         accept=".jpg,.jpeg,.png"
                     />
                     <img src={textureURL} style={{ maxHeight: "20vh" }} />
-                    <button type="button" onClick={() => setTextureURL(null)}>
-                        X
-                    </button>
+                    {textureURL != null && (
+                        <button
+                            type="button"
+                            onClick={() => setTextureURL(null)}
+                        >
+                            X
+                        </button>
+                    )}
                 </div>
                 <button type="submit">Submit</button>
             </form>

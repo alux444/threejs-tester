@@ -1,6 +1,7 @@
 export interface FormData {
     shape: string;
     color: string;
+    cameraZ: number;
     xRotation: number;
     yRotation: number;
     zRotation: number;

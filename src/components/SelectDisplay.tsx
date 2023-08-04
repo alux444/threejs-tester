@@ -7,6 +7,7 @@ const SelectDisplay = () => {
     const [form, setForm] = useState<FormData>({
         shape: "Box",
         color: "#ffffff",
+        cameraZ: 10,
         xRotation: 0.01,
         yRotation: 0.01,
         zRotation: 0.01,
@@ -21,10 +22,9 @@ const SelectDisplay = () => {
     };
 
     return (
-        <div>
-            <p>Select Criteria</p>
-            <small>Currently: {form.shape} </small>
+        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
             <Form updateDisplay={newDisplaySubmit} />
+            <small>Currently: {form.shape} </small>
             <Display data={form} />
         </div>
     );
