@@ -11,6 +11,9 @@ const SelectDisplay = () => {
         yRotation: 0.01,
         zRotation: 0.01,
         texture: null,
+        optionOne: undefined,
+        optionTwo: undefined,
+        optionThree: undefined,
     });
 
     const newDisplaySubmit = (data: FormData) => {

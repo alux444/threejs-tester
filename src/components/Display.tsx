@@ -28,7 +28,11 @@ const Display = ({ data }: { data: FormData }) => {
         };
 
         const selectedShape = shapes[data.shape] || THREE.BoxGeometry;
-        return new selectedShape();
+        return new selectedShape(
+            data.optionOne,
+            data.optionTwo,
+            data.optionThree
+        );
     };
 
     const initScene = () => {
@@ -52,7 +56,7 @@ const Display = ({ data }: { data: FormData }) => {
             window.innerWidth * 0.8,
             window.innerHeight * 0.8
         );
-        rendererRef.current.setClearColor(0x000000, 0);
+        rendererRef.current.setClearColor(0x000000, 1);
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         ambientLight.castShadow = true;

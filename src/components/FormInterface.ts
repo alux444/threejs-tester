@@ -5,4 +5,7 @@ export interface FormData {
     yRotation: number;
     zRotation: number;
     texture: string | null;
+    optionOne: number | undefined;
+    optionTwo: number | undefined;
+    optionThree: number | undefined;
 }

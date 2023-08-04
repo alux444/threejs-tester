@@ -64,13 +64,33 @@ const Form = ({ updateDisplay }) => {
             yRotation: yRot,
             zRotation: zRot,
             texture: textureURL,
+            optionOne: undefined,
+            optionTwo: undefined,
+            optionThree: undefined,
         };
         updateDisplay(newDisplay);
     };
 
     return (
-        <div>
-            <form onSubmit={onSubmit}>
+        <div
+            style={{
+                display: "flex",
+                flexWrap: "wrap",
+                justifyContent: "center",
+                gap: "2rem",
+            }}
+        >
+            <form
+                onSubmit={onSubmit}
+                style={{
+                    display: "flex",
+                    flexWrap: "wrap",
+                    justifyContent: "center",
+                    gap: "5px",
+                    alignItems: "center",
+                    flexDirection: "column",
+                }}
+            >
                 <select value={selectedShape} onChange={handleShapeChange}>
                     {shapeOptions.map((option) => (
                         <option key={option} value={option}>
@@ -83,37 +103,48 @@ const Form = ({ updateDisplay }) => {
                     onChangeComplete={handleColorChange}
                 />
                 <small>Color: {color}</small>
-                <label>X rotation</label>
-                <input
-                    type="number"
-                    value={xRot}
-                    name="xRot"
-                    onChange={handleRotChange}
-                />
-                <label>Y rotation</label>
-                <input
-                    type="number"
-                    value={yRot}
-                    name="yRot"
-                    onChange={handleRotChange}
-                />
-                <label>Z rotation</label>
-                <input
-                    type="number"
-                    value={zRot}
-                    name="zRot"
-                    onChange={handleRotChange}
-                />
-
-                <input
-                    id="image-upload"
-                    type="file"
-                    className="file-input"
-                    onChange={onChangeImage}
-                    accept=".jpg,.jpeg,.png"
-                />
-                <p>Texture Preview</p>
-                <img src={textureURL} />
+                <div style={{ display: "flex", gap: "1rem" }}>
+                    <label>X rotation</label>
+                    <input
+                        type="number"
+                        value={xRot}
+                        name="xRot"
+                        onChange={handleRotChange}
+                    />
+                    <label>Y rotation</label>
+                    <input
+                        type="number"
+                        value={yRot}
+                        name="yRot"
+                        onChange={handleRotChange}
+                    />
+                    <label>Z rotation</label>
+                    <input
+                        type="number"
+                        value={zRot}
+                        name="zRot"
+                        onChange={handleRotChange}
+                    />
+                </div>
+                <div
+                    style={{
+                        display: "flex",
+                        gap: "1rem",
+                        alignItems: "center",
+                    }}
+                >
+                    <input
+                        id="image-upload"
+                        type="file"
+                        className="file-input"
+                        onChange={onChangeImage}
+                        accept=".jpg,.jpeg,.png"
+                    />
+                    <img src={textureURL} style={{ maxHeight: "20vh" }} />
+                    <button type="button" onClick={() => setTextureURL(null)}>
+                        X
+                    </button>
+                </div>
                 <button type="submit">Submit</button>
             </form>
         </div>
