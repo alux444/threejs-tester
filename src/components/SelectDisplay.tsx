@@ -6,11 +6,11 @@ import { FormData } from "./FormInterface";
 const SelectDisplay = () => {
     const [form, setForm] = useState<FormData>({
         shape: "Box",
-        color: "#F2F2A2",
-        outlineSegments: false,
+        color: "#ffffff",
         xRotation: 0.01,
         yRotation: 0.01,
         zRotation: 0.01,
+        texture: null,
     });
 
     const newDisplaySubmit = (data: FormData) => {

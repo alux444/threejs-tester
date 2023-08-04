@@ -4,10 +4,8 @@ import { SketchPicker, ColorResult } from "react-color";
 
 const Form = ({ updateDisplay }) => {
     const [selectedShape, setSelectShape] = useState<string>("Box");
-    const [color, setColor] = useState<string>("##ffff00");
-    const [outlineSegments, setOutlineSegments] = useState<boolean>(true);
-    const [texture, setTexture] = useState<File>();
-    const [textureURL, setTextureURL] = useState<string>();
+    const [color, setColor] = useState<string>("#ffff00");
+    const [textureURL, setTextureURL] = useState<string | null>(null);
     const [xRot, setXRot] = useState<number>(0.01);
     const [yRot, setYRot] = useState<number>(0.01);
     const [zRot, setZRot] = useState<number>(0.01);
@@ -53,7 +51,6 @@ const Form = ({ updateDisplay }) => {
 
     const onChangeImage = (e) => {
         const image = e.target.files[0];
-        setTexture(image);
         const imageURL = URL.createObjectURL(image);
         setTextureURL(imageURL);
     };
@@ -63,10 +60,10 @@ const Form = ({ updateDisplay }) => {
         const newDisplay: FormData = {
             shape: selectedShape,
             color: color,
-            outlineSegments: outlineSegments,
             xRotation: xRot,
             yRotation: yRot,
             zRotation: zRot,
+            texture: textureURL,
         };
         updateDisplay(newDisplay);
     };
@@ -85,14 +82,7 @@ const Form = ({ updateDisplay }) => {
                     color={color}
                     onChangeComplete={handleColorChange}
                 />
-                <label>
-                    Show Segment Outlines
-                    <input
-                        type="checkbox"
-                        checked={outlineSegments}
-                        onChange={(e) => setOutlineSegments(e.target.checked)}
-                    />
-                </label>
+                <small>Color: {color}</small>
                 <label>X rotation</label>
                 <input
                     type="number"

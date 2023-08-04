@@ -4,13 +4,14 @@ import { FormData } from "./FormInterface";
 
 const Display = ({ data }: { data: FormData }) => {
     const canvasRef = useRef<HTMLCanvasElement>(null);
+    const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
     console.log(data);
 
     let scene: THREE.Scene,
         camera: THREE.PerspectiveCamera,
-        renderer: THREE.WebGLRenderer,
         display: THREE.Mesh,
-        wireframe: THREE.LineSegments;
+        texture: THREE.Texture,
+        material: THREE.MeshBasicMaterial;
 
     const chooseShape = () => {
         const shapes = {
@@ -41,14 +42,17 @@ const Display = ({ data }: { data: FormData }) => {
 
         camera.position.z = 10;
 
-        renderer = new THREE.WebGLRenderer({
+        rendererRef.current = new THREE.WebGLRenderer({
             antialias: true,
             canvas: canvasRef.current!,
             alpha: true,
         });
 
-        renderer.setSize(window.innerWidth * 0.8, window.innerHeight * 0.8);
-        renderer.setClearColor(0x000000, 0);
+        rendererRef.current.setSize(
+            window.innerWidth * 0.8,
+            window.innerHeight * 0.8
+        );
+        rendererRef.current.setClearColor(0x000000, 0);
 
         const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
         ambientLight.castShadow = true;
@@ -59,38 +63,28 @@ const Display = ({ data }: { data: FormData }) => {
         spotlight.position.set(0, 64, 32);
         scene.add(spotlight);
 
-        //   const texture = new THREE.TextureLoader().load(inputTexture);
         const geometry = chooseShape();
-        //   const material = new THREE.MeshBasicMaterial({ map: faceTexture });
-        const material = new THREE.MeshBasicMaterial({ color: data.color });
+
+        if (data.texture != null) {
+            texture = new THREE.TextureLoader().load(data.texture);
+            material = new THREE.MeshBasicMaterial({
+                map: texture,
+            });
+        } else {
+            material = new THREE.MeshBasicMaterial({
+                color: data.color,
+            });
+        }
+
         display = new THREE.Mesh(geometry, material);
         scene.add(display);
-
-        const wireframeGeometry = new THREE.WireframeGeometry(geometry);
-        const wireframeMaterial = new THREE.LineBasicMaterial({
-            color: 0x000000,
-        });
-        wireframe = new THREE.LineSegments(
-            wireframeGeometry,
-            wireframeMaterial
-        );
-
-        if (data.outlineSegments) {
-            scene.add(wireframe);
-        }
     };
 
     const animate = () => {
         display.rotation.x += data.xRotation;
         display.rotation.y += data.yRotation;
         display.rotation.z += data.zRotation;
-        if (data.outlineSegments) {
-            wireframe.rotation.x += data.xRotation;
-            wireframe.rotation.y += data.yRotation;
-            wireframe.rotation.z += data.zRotation;
-        }
-
-        renderer.render(scene, camera);
+        rendererRef.current?.render(scene, camera);
         window.requestAnimationFrame(animate);
     };
 
